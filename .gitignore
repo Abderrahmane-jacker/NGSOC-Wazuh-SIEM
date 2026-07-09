@@ -1,0 +1,15 @@
+# Secrets — never commit these
+.env
+*.env
+**/secrets/
+**/*credentials*
+**/*password*
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+
+# Docker volumes if run locally in-repo
+**/data/
+**/index/

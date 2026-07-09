@@ -1,0 +1,78 @@
+# NG-SOC SOAR stack — Shuffle + TheHive (+ Cortex, optional analyzer engine for TheHive)
+#
+# ⚠️ TODO (you need to do this):
+#   1. This is a starting template, not your exact deployed config. Replace
+#      image tags/versions with what you actually ran, and pull your real
+#      environment variables (ports, secrets, volume paths) from your lab.
+#   2. Wazuh itself is normally deployed via its own official docker-compose
+#      (see https://github.com/wazuh/wazuh-docker) — add that as a separate
+#      compose file (infrastructure/wazuh/docker-compose.yml) rather than
+#      merging it here, since it has its own multi-node indexer/manager setup.
+#   3. Never commit real secrets. Replace every CHANGE_ME below and use a
+#      .env file (add .env to .gitignore).
+
+version: "3.8"
+
+services:
+  thehive:
+    image: strangebee/thehive:5
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      - JVM_OPTS=-Xms1G -Xmx1G
+    volumes:
+      - thehive-data:/opt/thp/thehive/data
+      - thehive-index:/opt/thp/thehive/index
+    depends_on:
+      - cassandra
+      - elasticsearch
+
+  cassandra:
+    image: cassandra:4
+    restart: unless-stopped
+    environment:
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=256M
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+  shuffle-frontend:
+    image: ghcr.io/shuffle/shuffle-frontend:latest
+    restart: unless-stopped
+    ports:
+      - "3001:80"
+    depends_on:
+      - shuffle-backend
+
+  shuffle-backend:
+    image: ghcr.io/shuffle/shuffle-backend:latest
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - SHUFFLE_APP_HOTLOAD_FOLDER=./shuffle-apps
+      - DB_LOCATION=./shuffle-database
+      - SHUFFLE_DEFAULT_USERNAME=CHANGE_ME
+      - SHUFFLE_DEFAULT_PASSWORD=CHANGE_ME
+    volumes:
+      - shuffle-apps:/shuffle-apps
+      - shuffle-database:/shuffle-database
+
+volumes:
+  thehive-data:
+  thehive-index:
+  cassandra-data:
+  es-data:
+  shuffle-apps:
+  shuffle-database:
