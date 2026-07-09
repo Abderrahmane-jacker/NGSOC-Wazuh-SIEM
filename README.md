@@ -4,10 +4,12 @@
 
 **Authors:** Adnane El Bayaz & Abderrahmane Saouf — ENSA El Jadida, 2ᵉ Année CCN
 **Supervisor:** Prof. Ouaissa Mariyam
-**Full academic report:** [`docs/Rapport_PFA-NGSOC_VF.pdf`](docs/Rapport_PFA-NGSOC_VF.pdf)
+**Full academic report:** Contact Me
 
 <!-- TODO: add your architecture diagram here -->
+
 <!-- ![Architecture](docs/screenshots/architecture-diagram.png) -->
+![Architecture](docs/screenshots/architecture-diagram.png)
 
 ## What this is
 
