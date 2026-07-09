@@ -56,6 +56,8 @@ On a high-fidelity alert, the Shuffle playbook:
 
 Exported workflow definitions: [`soar-playbooks/`](soar-playbooks/)
 
+![Soar-playbook](docs/screenshots/Soar.png)
+
 ## Reproducing this lab
 
 See [`infrastructure/`](infrastructure/) for the Docker Compose stack and pfSense interface configuration. You'll need:
